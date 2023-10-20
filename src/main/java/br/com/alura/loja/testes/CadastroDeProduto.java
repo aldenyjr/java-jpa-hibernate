@@ -13,19 +13,30 @@ public class CadastroDeProduto {
     public static void main(String[] args) {
         Categoria celulares = new Categoria("CELULARES");
 
-        Produto celular = new Produto("Xiome Redmi",
-                "Muito Legal", new BigDecimal("800"),celulares );
+//        Produto celular = new Produto("Xiome Redmi",
+//                "Muito Legal", new BigDecimal("800"),celulares );
 
         EntityManager manager = JPAUtil.getEntityManager();
-        ProdutoDao produtoDao = new ProdutoDao(manager);
+//        ProdutoDao produtoDao = new ProdutoDao(manager);
         CategoriaDao categoriaDao = new CategoriaDao(manager);
 
         manager.getTransaction().begin();
 
-        categoriaDao.cadastrar(celulares);
-        produtoDao.cadastrar(celular);
+        manager.persist(celulares);
+        celulares.setNome("XPTO");
 
-        manager.getTransaction().commit();
-        manager.close();
+//        categoriaDao.cadastrar(celulares);
+//        produtoDao.cadastrar(celular);
+
+        manager.flush();
+        manager.clear();
+
+        celulares = manager.merge(celulares);
+//        celulares = categoriaDao.atualizar(celulares);
+        celulares.setNome("1234");
+        manager.flush();
+        manager.remove(celulares);
+//        categoriaDao.remover(celulares);
+        manager.flush();
     }
 }
