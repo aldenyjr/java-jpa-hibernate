@@ -12,35 +12,14 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class CadastroDePedido {
+public class PerformaceConsultas {
     public static void main(String[] args) {
 
         popularBancoDeDados();
         EntityManager manager = JPAUtil.getEntityManager();
-        ProdutoDao produtoDao = new ProdutoDao(manager);
-        Produto produto = produtoDao.buscarPorId(1L);
+        Pedido pedido = manager.find(Pedido.class, 1L);
+        System.out.println(pedido.getItens().size());
 
-        ClienteDao clienteDao = new ClienteDao(manager);
-        Cliente cliente = clienteDao.buscarPorId(1L);
-
-        manager.getTransaction().begin();
-
-
-        Pedido pedido = new Pedido(cliente);
-        pedido.adicionarItem(new ItemPedido(10, pedido, produto));
-
-        PedidoDao pedidoDao = new PedidoDao(manager);
-        pedidoDao.cadastrar(pedido);
-
-
-
-        manager.getTransaction().commit();
-
-        BigDecimal totalVendido = pedidoDao.valorTotalVendido();
-        System.out.println("Valor Total: " + totalVendido);
-
-        List<RelatorioDeVendasVo> relatorio = pedidoDao.relatorioDeVendas();
-        relatorio.forEach(vendas -> System.out.println(vendas));
 
     }
 
@@ -55,6 +34,12 @@ public class CadastroDePedido {
         Categoria categoria = new Categoria("FastFood");
         Produto bigbugger = new Produto("Big Burgger", "Hamburguer", new BigDecimal(19.90), categoria);
         Cliente cliente = new Cliente("Rodrigo", "123456");
+
+        Pedido pedido = new Pedido(cliente);
+        pedido.adicionarItem(new ItemPedido(10, pedido, bigbugger));
+
+        PedidoDao pedidoDao = new PedidoDao(manager);
+        pedidoDao.cadastrar(pedido);
 
         categoriaDao.cadastrar(categoria);
         produtoDao.cadastrar(bigbugger);
