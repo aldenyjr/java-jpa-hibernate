@@ -7,9 +7,11 @@ import br.com.alura.loja.dao.ProdutoDao;
 import br.com.alura.loja.modelo.*;
 import br.com.alura.loja.util.JPAUtil;
 import br.com.alura.loja.vo.RelatorioDeVendasVo;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class PerformaceConsultas {
@@ -17,8 +19,18 @@ public class PerformaceConsultas {
 
         popularBancoDeDados();
         EntityManager manager = JPAUtil.getEntityManager();
-        Pedido pedido = manager.find(Pedido.class, 1L);
-        System.out.println(pedido.getItens().size());
+//        Pedido pedido = manager.find(Pedido.class, 1L);
+
+        PedidoDao pedidoDao = new PedidoDao(manager);
+        Pedido pedido = pedidoDao.buscarPedidoComCliente(1L);
+
+        ProdutoDao produtoDao = new ProdutoDao(manager);
+
+        System.out.println(produtoDao.buscaPorParamentrosComCriteria("Big Burgger", null, LocalDate.now()));
+
+        manager.close();
+        System.out.println(pedido.getCliente().getNome());
+
 
 
     }
