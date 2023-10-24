@@ -29,7 +29,7 @@ public class PerformaceConsultas {
         System.out.println(produtoDao.buscaPorParamentrosComCriteria("Big Burgger", null, LocalDate.now()));
 
         manager.close();
-        System.out.println(pedido.getCliente().getNome());
+        System.out.println(pedido.getCliente().getDadosPessoais().getNome());
 
 
 
